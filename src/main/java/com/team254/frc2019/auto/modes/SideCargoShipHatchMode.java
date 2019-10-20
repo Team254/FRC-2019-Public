@@ -36,6 +36,7 @@ public class SideCargoShipHatchMode extends AutoModeBase {
         }
         third_path = new DrivePathAction(new CargoShip1ToFeederPath(left), false);
         fourth_path = new DrivePathAction(new FeederToCargoShip2Path(left));
+        fifth_path = new DrivePathAction(new CargoShip2ToFeederPath(left));
     }
 
     @Override
@@ -84,7 +85,7 @@ public class SideCargoShipHatchMode extends AutoModeBase {
         runAction(new ParallelAction(Arrays.asList(fourth_path, new SeriesAction(Arrays.asList(
                 new LambdaAction(
                         () -> EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISC)),
-                new WaitForPathMarkerAction(FeederToCargoShip3Path.kTurnTurretMarker),
+                new WaitForPathMarkerAction(FeederToCargoShip2Path.kTurnTurretMarker),
                 new LambdaAction(
                         () -> Superstructure.getInstance().setWantFieldRelativeTurret(rotation_hint)),
                 new LambdaAction(
@@ -93,9 +94,22 @@ public class SideCargoShipHatchMode extends AutoModeBase {
                         () -> EndEffector.getInstance().setWantedAction(
                                 EndEffectorStateMachine.WantedAction.IDLE))
         )))));
+
         RobotState.getInstance().resetVision();
         Superstructure.getInstance().resetAimingParameters();
-        Superstructure.getInstance().setWantAutoAim(
-                Rotation2d.fromDegrees((mLeft ? 1.0 : -1.0) * -90.0));
+        runAction(new AutoAimAndScoreAction(Rotation2d.fromDegrees((mLeft ? 1.0 : -1.0) * -90.0)));
+
+        SuperstructureCommands.goToPickupDiskFromWallFront();
+        SuperstructureCommands.setTurretManualHeading(Rotation2d.fromDegrees(180.0));
+
+        runAction(new ParallelAction(Arrays.asList(fifth_path, new SeriesAction(Arrays.asList(
+                new WaitForPathMarkerAction(CargoShip2ToFeederPath.kLookForTargetMarker),
+                new LambdaAction(() -> RobotState.getInstance().resetVision()),
+                new LambdaAction(() -> Superstructure.getInstance().resetAimingParameters()),
+                new WaitUntilSeesTargetAction(), new ForceEndPathAction())))));
+
+        Action secondAutosteerAction = new AutoSteerAndIntakeAction(/*reverse=*/true, false);
+        runAction(secondAutosteerAction);
+
     }
 }

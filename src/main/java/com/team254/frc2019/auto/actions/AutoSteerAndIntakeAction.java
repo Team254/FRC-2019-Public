@@ -22,6 +22,8 @@ public class AutoSteerAndIntakeAction implements Action {
     private boolean mIdleWhenDone = false;
     private boolean mReverse = false;
 
+    private final double kThrottle = 0.3;
+
     public AutoSteerAndIntakeAction(boolean reverse, boolean idleWhenDone) {
         mIdleWhenDone = idleWhenDone;
         mReverse = reverse;
@@ -42,7 +44,7 @@ public class AutoSteerAndIntakeAction implements Action {
         if (aimParams.isEmpty() || EndEffector.getInstance().hasDisk()) {
             mDrive.setOpenLoop(DriveSignal.BRAKE);
         } else {
-            mDrive.autoSteer(0.3 * (mReverse ? -1.0 : 1.0), aimParams.get());
+            mDrive.autoSteer(kThrottle * (mReverse ? -1.0 : 1.0), aimParams.get());
         }
         mFinished = mHasDisk.update(Timer.getFPGATimestamp(), EndEffector.getInstance().hasDisk());
     }
