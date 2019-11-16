@@ -134,7 +134,7 @@ public class Constants {
         kTurretConstants.kPeakCurrentDuration = 10; // milliseconds
         kTurretConstants.kMaxVoltage = 12.0;
 
-        kTurretConstants.kStastusFrame8UpdateRate = 50;
+        kTurretConstants.kStatusFrame8UpdateRate = 50;
         kTurretConstants.kRecoverPositionOnReset = true;
     }
 

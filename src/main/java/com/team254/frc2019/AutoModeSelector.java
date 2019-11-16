@@ -15,6 +15,7 @@ public class AutoModeSelector {
     enum DesiredMode {
         DRIVE_BY_CAMERA,
         LOW_ROCKET,
+        MIDDLE_ROCKET,
         SIDE_CARGO_SHIP_HATCH,
         FRONT_THEN_SIDE_CARGO_SHIP,
         DO_NOTHING,
@@ -44,7 +45,8 @@ public class AutoModeSelector {
         mModeChooser = new SendableChooser<>();
         mModeChooser.setDefaultOption("Drive By Camera", DesiredMode.DRIVE_BY_CAMERA);
         mModeChooser.addOption("Do Nothing", DesiredMode.DO_NOTHING);
-        mModeChooser.addOption("Rocket - LOW", DesiredMode.LOW_ROCKET);
+        mModeChooser.addOption("Rocket 1", DesiredMode.LOW_ROCKET);
+        mModeChooser.addOption("Rocket 2", DesiredMode.MIDDLE_ROCKET);
         mModeChooser.addOption("Cargo Ship 2 Hatch", DesiredMode.SIDE_CARGO_SHIP_HATCH);
         mModeChooser.addOption("Front Then Side Cargo Ship",
                 DesiredMode.FRONT_THEN_SIDE_CARGO_SHIP);
@@ -56,14 +58,14 @@ public class AutoModeSelector {
 
     public void updateModeCreator() {
         DesiredMode desiredMode = mModeChooser.getSelected();
-        StartingPosition staringPosition = mStartPositionChooser.getSelected();
-        if (mCachedDesiredMode != desiredMode || staringPosition != mCachedStartingPosition) {
+        StartingPosition startingPosition = mStartPositionChooser.getSelected();
+        if (mCachedDesiredMode != desiredMode || startingPosition != mCachedStartingPosition) {
             System.out.println("Auto selection changed, updating creator: desiredMode->" + desiredMode.name()
-                    + ", starting position->" + staringPosition.name());
-            mAutoMode = getAutoModeForParams(desiredMode, staringPosition);
+                    + ", starting position->" + startingPosition.name());
+            mAutoMode = getAutoModeForParams(desiredMode, startingPosition);
         }
         mCachedDesiredMode = desiredMode;
-        mCachedStartingPosition = staringPosition;
+        mCachedStartingPosition = startingPosition;
     }
 
     private boolean startingLeft(StartingPosition position) {
@@ -87,7 +89,9 @@ public class AutoModeSelector {
                 return Optional.of(new FrontThenSideCargoShipMode(
                         startingLeft(position), startingHab1(position)));
             case LOW_ROCKET:
-                return Optional.of(new RocketHatchMode(startingLeft(position), startingHab1(position)));
+                return Optional.of(new RocketHatchLowMode(startingLeft(position), startingHab1(position)));
+            case MIDDLE_ROCKET:
+                return Optional.of(new RocketHatchMiddleMode(startingLeft(position), startingHab1(position)));
             case TEST_CONTROL_FLOW:
                 return Optional.of(new TestControlFlowMode());
             case DRIVE_CHARACTERIZATION_STRAIGHT:

@@ -2,9 +2,9 @@ package com.team254.frc2019.auto.actions;
 
 import com.team254.frc2019.statemachines.SuperstructureCommands;
 
-public class GoToWantDiscAction extends SuperstructureActionBase {
+public class GoToWantDiskAction extends SuperstructureActionBase {
 
-    public GoToWantDiscAction(boolean waitForDesired) {
+    public GoToWantDiskAction(boolean waitForDesired) {
         super(waitForDesired);
     }
 

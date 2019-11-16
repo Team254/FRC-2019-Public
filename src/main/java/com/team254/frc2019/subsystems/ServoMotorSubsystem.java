@@ -70,7 +70,7 @@ public abstract class ServoMotorSubsystem extends Subsystem {
         public double kMaxUnitsLimit = Double.POSITIVE_INFINITY;
         public double kMinUnitsLimit = Double.NEGATIVE_INFINITY;
 
-        public int kStastusFrame8UpdateRate = 1000;
+        public int kStatusFrame8UpdateRate = 1000;
         public boolean kRecoverPositionOnReset = false;
     }
 
@@ -191,7 +191,7 @@ public abstract class ServoMotorSubsystem extends Subsystem {
         mMaster.setNeutralMode(NeutralMode.Brake);
         mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 20);
         mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 20);
-        mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStastusFrame8UpdateRate, 20);
+        mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, 20);
 
         // Start with kMotionProfileSlot.
         mMaster.selectProfileSlot(kMotionProfileSlot, 0);
@@ -360,7 +360,7 @@ public abstract class ServoMotorSubsystem extends Subsystem {
                     System.out.println(mConstants.kName + ": Master Talon reset occurred; resetting frame rates.");
                     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 20);
                     mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 20);
-                    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStastusFrame8UpdateRate, 20);
+                    mMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, mConstants.kStatusFrame8UpdateRate, 20);
 
                     // Reset encoder position to estimated position from absolute encoder
                     if (mConstants.kRecoverPositionOnReset) {

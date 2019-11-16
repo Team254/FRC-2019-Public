@@ -33,7 +33,7 @@ public class AutoSteerAndIntakeAction implements Action {
     public void start() {
         mHasDisk = new DelayedBoolean(Timer.getFPGATimestamp(), 0.05);
         SuperstructureCommands.goToPickupDiskFromWallFront();
-        EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISC);
+        EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISK);
         Superstructure.getInstance().setWantAutoAim(Rotation2d.fromDegrees(180.0),
                 true, 50);
     }

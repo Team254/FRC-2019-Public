@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 import java.util.Arrays;
 
-public class RocketHatchMode extends AutoModeBase {
+public class RocketHatchLowMode extends AutoModeBase {
     DrivePathAction first_path;
     DrivePathAction second_path;
     DrivePathAction third_path;
@@ -25,7 +25,7 @@ public class RocketHatchMode extends AutoModeBase {
     boolean mLeft;
     boolean mStartHab1;
 
-    public RocketHatchMode(boolean left, boolean startHab1) {
+    public RocketHatchLowMode(boolean left, boolean startHab1) {
         mLeft = left;
         mStartHab1 = startHab1;
         if (mStartHab1) {
@@ -80,7 +80,7 @@ public class RocketHatchMode extends AutoModeBase {
         final Rotation2d rotation_hint = Rotation2d.fromDegrees((mLeft ? 1.0 : -1.0) * 150.0);
         runAction(new ParallelAction(Arrays.asList(fourth_path, new SeriesAction(Arrays.asList(
                 new LambdaAction(
-                        () -> EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISC)),
+                        () -> EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISK)),
                 new WaitForPathMarkerAction(mStartHab1 ? FeederToRocketFarPath.kTurnTurretMarker :
                         FeederToRocketFarScoringPositionPath.kTurnTurretMarker),
                 new LambdaAction(

@@ -84,7 +84,7 @@ public class SideCargoShipHatchMode extends AutoModeBase {
         final Rotation2d rotation_hint = Rotation2d.fromDegrees((mLeft ? 1.0 : -1.0) * -90.0);
         runAction(new ParallelAction(Arrays.asList(fourth_path, new SeriesAction(Arrays.asList(
                 new LambdaAction(
-                        () -> EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISC)),
+                        () -> EndEffector.getInstance().setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISK)),
                 new WaitForPathMarkerAction(FeederToCargoShip2Path.kTurnTurretMarker),
                 new LambdaAction(
                         () -> Superstructure.getInstance().setWantFieldRelativeTurret(rotation_hint)),

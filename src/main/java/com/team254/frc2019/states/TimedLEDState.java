@@ -10,8 +10,8 @@ public interface TimedLEDState {
                 LEDState.kOff, LEDState.kRobotZeroed, 0.250);
         public static BlinkingLEDState kBlinkingIntakeCargo = new BlinkingLEDState(
                 LEDState.kOff, LEDState.kIntakeIntakingCargo, 0.1);
-        public static BlinkingLEDState kBlinkingIntakingDisc = new BlinkingLEDState(
-                LEDState.kOff, LEDState.kIntakeIntakingDisc, 0.1);
+        public static BlinkingLEDState kBlinkingIntakingDisk = new BlinkingLEDState(
+                LEDState.kOff, LEDState.kIntakeIntakingDisk, 0.1);
 
         public static BlinkingLEDState kHangNoPressure = new BlinkingLEDState(
                 LEDState.kOff, LEDState.kHanging, 0.5);
@@ -38,7 +38,7 @@ public interface TimedLEDState {
 
     class StaticLEDState implements TimedLEDState {
         public static StaticLEDState kStaticOff = new StaticLEDState(LEDState.kOff);
-        public static StaticLEDState kIntakingDisc = new StaticLEDState(LEDState.kIntakeIntakingDisc);
+        public static StaticLEDState kIntakingDisk = new StaticLEDState(LEDState.kIntakeIntakingDisk);
         public static StaticLEDState kIntakingCargo = new StaticLEDState(LEDState.kIntakeIntakingCargo);
         public static StaticLEDState kExhausting = new StaticLEDState(LEDState.kIntakeExhuasting);
 

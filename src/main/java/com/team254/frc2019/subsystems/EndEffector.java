@@ -118,7 +118,7 @@ public class EndEffector extends Subsystem {
         mCurrentState.tremorMotor = 0.0;
         mCurrentState.ballIntakeMotor = 0.0;
         mCurrentState.hasBall = false;
-        mCurrentState.hasDisc = false;
+        mCurrentState.hasDisk = false;
     }
 
     private void updateCurrentState(double timestamp,
@@ -128,12 +128,12 @@ public class EndEffector extends Subsystem {
         mCurrentState.ballIntakeMotor = desiredState.ballIntakeMotor;
         mCurrentState.hasBall = CarriageCanifier.getInstance().hasBall();
         if (Double.isNaN(mLastNoStallTime) || Double.isNaN(mLastTremorsOnTime)) {
-            mCurrentState.hasDisc = false;
+            mCurrentState.hasDisk = false;
         } else if (timestamp - mLastNoStallTime > 0.1 &&
                 timestamp - mLastTremorsOnTime > 0.3) {
-            mCurrentState.hasDisc = true;
+            mCurrentState.hasDisk = true;
         } else {
-            mCurrentState.hasDisc = false;
+            mCurrentState.hasDisk = false;
         }
     }
 
@@ -168,7 +168,7 @@ public class EndEffector extends Subsystem {
     }
 
     public synchronized boolean hasDisk() {
-        return getGamePiece() == GamePiece.DISK && mCurrentState.hasDisc;
+        return getGamePiece() == GamePiece.DISK && mCurrentState.hasDisk;
     }
 
     public synchronized EndEffectorStateMachine.SystemState getEndEffectorSystemState() {

@@ -7,7 +7,7 @@ import com.team254.lib.geometry.Twist2d;
 
 /**
  * Implements an adaptive pure pursuit controller. See:
- * https://www.ri.cmu.edu/pub_files/pub1/kelly_alonzo_1994_4/kelly_alonzo_1994_4 .pdf
+ * https://www.ri.cmu.edu/pub_files/pub1/kelly_alonzo_1994_4/kelly_alonzo_1994_4.pdf
  * <p>
  * Basically, we find a spot on the path we'd like to follow and calculate the arc necessary to make us land on that
  * spot. The target spot is a specified distance ahead of us, and we look further ahead the greater our tracking error.

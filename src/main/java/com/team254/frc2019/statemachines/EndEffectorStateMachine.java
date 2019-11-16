@@ -13,17 +13,17 @@ public class EndEffectorStateMachine {
     private final double kTremorExhaustForBallPower = 1.0;
 
     private final double kMinTimeWithBall = 0.1;
-    private final double kMinTimeWithDisc = 0.5;
+    private final double kMinTimeWithDisk = 0.5;
     private final double kMinTimeBallIntaking = 0.25;
     private final double kBlinkingDurationHaveBall = 0.5;
-    private final double kBlinkingDurationHaveDisc = 0.5;
+    private final double kBlinkingDurationHaveDisk = 0.5;
 
     public enum WantedAction {
-        INTAKE_CARGO, INTAKE_DISC, EXHAUST, IDLE
+        INTAKE_CARGO, INTAKE_DISK, EXHAUST, IDLE
     }
 
     public enum SystemState {
-        IDLE, INTAKING_CARGO, INTAKING_DISC, HAVE_CARGO, HAVE_DISC, EXHAUSTING
+        IDLE, INTAKING_CARGO, INTAKING_DISK, HAVE_CARGO, HAVE_DISK, EXHAUSTING
     }
 
     public static class EndEffectorState {
@@ -38,7 +38,7 @@ public class EndEffectorStateMachine {
         public double ballIntakeMotor = 0.0;
 
         public boolean hasBall = false;
-        public boolean hasDisc = false;
+        public boolean hasDisk = false;
 
         @Override
         public String toString() {
@@ -47,7 +47,7 @@ public class EndEffectorStateMachine {
                     ", tremorMotor=" + tremorMotor +
                     ", ballIntakeMotor=" + ballIntakeMotor +
                     ", hasBall=" + hasBall +
-                    ", hasDisc=" + hasDisc +
+                    ", hasDisk=" + hasDisk +
                     '}';
         }
     }
@@ -57,7 +57,7 @@ public class EndEffectorStateMachine {
     private LED mLED = LED.getInstance();
     private double mCurrentStateStartTime = 0.0;
     private double mLastNoBallTime = Double.NaN;
-    private double mLastNoDiscTime = Double.NaN;
+    private double mLastNoDiskTime = Double.NaN;
 
     public synchronized SystemState getSystemState() {
         return mSystemState;
@@ -71,8 +71,8 @@ public class EndEffectorStateMachine {
             case IDLE:
                 newState = handleIdleStateTransitions(wantedAction);
                 break;
-            case INTAKING_DISC:
-                newState = handleIntakingDiscTransitions(currentState, timestamp, wantedAction);
+            case INTAKING_DISK:
+                newState = handleIntakingDiskTransitions(currentState, timestamp, wantedAction);
                 break;
             case INTAKING_CARGO:
                 newState = handleIntakingCargoTransitions(currentState, timestamp, timeInState, wantedAction);
@@ -80,8 +80,8 @@ public class EndEffectorStateMachine {
             case HAVE_CARGO:
                 newState = handleHaveCargoTransitions(currentState, wantedAction);
                 break;
-            case HAVE_DISC:
-                newState = handleHaveDiscTransitions(wantedAction);
+            case HAVE_DISK:
+                newState = handleHaveDiskTransitions(wantedAction);
                 break;
             case EXHAUSTING:
                 newState = handleExhaustTransitions(wantedAction);
@@ -96,7 +96,7 @@ public class EndEffectorStateMachine {
             System.out.println(timestamp + ": Changed state: " + mSystemState + " -> " + newState);
             mSystemState = newState;
             mCurrentStateStartTime = Timer.getFPGATimestamp();
-            mLastNoDiscTime = timestamp;
+            mLastNoDiskTime = timestamp;
             mLastNoBallTime = timestamp;
             timeInState = 0.0;
         }
@@ -105,8 +105,8 @@ public class EndEffectorStateMachine {
             case IDLE:
                 getIdleDesiredState(currentState, mDesiredState);
                 break;
-            case INTAKING_DISC:
-                getIntakingDiscDesiredState(currentState, mDesiredState);
+            case INTAKING_DISK:
+                getIntakingDiskDesiredState(currentState, mDesiredState);
                 break;
             case INTAKING_CARGO:
                 getIntakingCargoDesiredState(currentState, mDesiredState);
@@ -114,8 +114,8 @@ public class EndEffectorStateMachine {
             case HAVE_CARGO:
                 getHaveCargoDesiredState(currentState, mDesiredState, timeInState);
                 break;
-            case HAVE_DISC:
-                getHaveDiscDesiredState(currentState, mDesiredState, timeInState);
+            case HAVE_DISK:
+                getHaveDiskDesiredState(currentState, mDesiredState, timeInState);
                 break;
             case EXHAUSTING:
                 getExhaustingDesiredState(currentState, mDesiredState);
@@ -134,8 +134,8 @@ public class EndEffectorStateMachine {
                 return SystemState.IDLE;
             case EXHAUST:
                 return SystemState.EXHAUSTING;
-            case INTAKE_DISC:
-                return SystemState.INTAKING_DISC;
+            case INTAKE_DISK:
+                return SystemState.INTAKING_DISK;
             case INTAKE_CARGO:
                 return SystemState.INTAKING_CARGO;
         }
@@ -155,27 +155,27 @@ public class EndEffectorStateMachine {
         mLED.setIntakeLEDState(TimedLEDState.StaticLEDState.kStaticOff);
     }
 
-    // INTAKING_DISC
-    private SystemState handleIntakingDiscTransitions(EndEffectorState currentState,
+    // INTAKING_DISK
+    private SystemState handleIntakingDiskTransitions(EndEffectorState currentState,
                                                       double timestamp,
                                                       WantedAction wantedAction) {
-        if (!currentState.hasDisc) {
-            mLastNoDiscTime = timestamp;
+        if (!currentState.hasDisk) {
+            mLastNoDiskTime = timestamp;
         }
 
-        if (!Double.isNaN(mLastNoDiscTime) && (timestamp - mLastNoDiscTime > kMinTimeWithDisc)) {
-            return SystemState.HAVE_DISC;
+        if (!Double.isNaN(mLastNoDiskTime) && (timestamp - mLastNoDiskTime > kMinTimeWithDisk)) {
+            return SystemState.HAVE_DISK;
         }
 
         return defaultTransitions(wantedAction);
     }
 
-    private void getIntakingDiscDesiredState(EndEffectorState currentState, EndEffectorState desiredState) {
+    private void getIntakingDiskDesiredState(EndEffectorState currentState, EndEffectorState desiredState) {
         desiredState.jawState = EndEffectorState.JawState.CLOSED;
         desiredState.ballIntakeMotor = 0.0;
         desiredState.tremorMotor = kTremorIntakePower;
 
-        mLED.setIntakeLEDState(TimedLEDState.StaticLEDState.kIntakingDisc);
+        mLED.setIntakeLEDState(TimedLEDState.StaticLEDState.kIntakingDisk);
     }
 
     // INTAKING_CARGO
@@ -210,8 +210,8 @@ public class EndEffectorStateMachine {
         switch (wantedAction) {
             case EXHAUST:
                 return SystemState.EXHAUSTING;
-            case INTAKE_DISC:
-                return SystemState.INTAKING_DISC;
+            case INTAKE_DISK:
+                return SystemState.INTAKING_DISK;
             case INTAKE_CARGO:
                 return SystemState.INTAKING_CARGO;
             default:
@@ -236,21 +236,21 @@ public class EndEffectorStateMachine {
         }
     }
 
-    // HAVE_DISC
-    private SystemState handleHaveDiscTransitions(WantedAction wantedAction) {
+    // HAVE_DISK
+    private SystemState handleHaveDiskTransitions(WantedAction wantedAction) {
         return defaultTransitions(wantedAction);
     }
 
-    private void getHaveDiscDesiredState(EndEffectorState currentState, EndEffectorState desiredState,
+    private void getHaveDiskDesiredState(EndEffectorState currentState, EndEffectorState desiredState,
                                          double timeInState) {
         desiredState.jawState = EndEffectorState.JawState.CLOSED;
         desiredState.ballIntakeMotor = 0.0;
         desiredState.tremorMotor = kTremorIntakePower;
 
-        if (timeInState < kBlinkingDurationHaveDisc) {
-            mLED.setIntakeLEDState(TimedLEDState.BlinkingLEDState.kBlinkingIntakingDisc);
+        if (timeInState < kBlinkingDurationHaveDisk) {
+            mLED.setIntakeLEDState(TimedLEDState.BlinkingLEDState.kBlinkingIntakingDisk);
         } else {
-            mLED.setIntakeLEDState(TimedLEDState.StaticLEDState.kIntakingDisc);
+            mLED.setIntakeLEDState(TimedLEDState.StaticLEDState.kIntakingDisk);
         }
     }
 

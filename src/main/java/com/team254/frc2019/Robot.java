@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     private final Arm mArm = Arm.getInstance();
     private final Wrist mWrist = Wrist.getInstance();
     private final Kickstand mKickstand = Kickstand.getInstance();
-    private final CarriageCanifier mCarriageCanifer = CarriageCanifier.getInstance();
+    private final CarriageCanifier mCarriageCanifier = CarriageCanifier.getInstance();
     private final Vacuum mVacuum = Vacuum.getInstance();
     private final LED mLED = LED.getInstance();
     private final Infrastructure mInfrastructure = Infrastructure.getInstance();
@@ -106,14 +106,14 @@ public class Robot extends TimedRobot {
                     mKickstand,
                     mVacuum,
                     mLLManager,
-                    mCarriageCanifer,
+                    mCarriageCanifier,
                     mInfrastructure);
 
             mTurret.zeroSensors();
             mElevator.zeroSensors();
             mArm.zeroSensors();
             mWrist.zeroSensors();
-            mCarriageCanifer.zeroSensors();
+            mCarriageCanifier.zeroSensors();
 
             mSubsystemManager.registerEnabledLoops(mEnabledLooper);
             mSubsystemManager.registerDisabledLoops(mDisabledLooper);
@@ -287,7 +287,7 @@ public class Robot extends TimedRobot {
                 mElevator.zeroSensors();
                 mArm.zeroSensors();
                 mWrist.zeroSensors();
-                mCarriageCanifer.zeroSensors();
+                mCarriageCanifier.zeroSensors();
 
                 mLLManager.triggerOutputs();
                 mLLManager.writePeriodicOutputs();
@@ -296,7 +296,7 @@ public class Robot extends TimedRobot {
             // Update auto modes
             mAutoModeSelector.updateModeCreator();
 
-            mCarriageCanifer.writePeriodicOutputs();
+            mCarriageCanifier.writePeriodicOutputs();
 
             if (mVacuum.isAtClimbingPressure()) {
                 LED.getInstance().setClimbLEDState(TimedLEDState.StaticLEDState.kHangOptimalPressure);
@@ -335,8 +335,6 @@ public class Robot extends TimedRobot {
 
         if (mDriveByCameraInAuto || mAutoModeExecutor.isInterrupted()) {
             manualControl(/*sandstorm=*/true);
-        } else {
-
         }
     }
 
@@ -548,14 +546,14 @@ public class Robot extends TimedRobot {
                 mEndEffector.setWantedAction(EndEffectorStateMachine.WantedAction.EXHAUST);
                 mIntakeButtonPressed = true;
             } else if (mControlBoard.getPickupDiskWall()) {
-                mEndEffector.setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISC);
+                mEndEffector.setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_DISK);
                 if (mEndEffector.hasDisk()) {
                     rumble = true;
                 }
                 mIntakeButtonPressed = true;
             } else if (mControlBoard.getPickupBallGround()) {
                 mEndEffector.setWantedAction(EndEffectorStateMachine.WantedAction.INTAKE_CARGO);
-                if (mCarriageCanifer.hasBall()) {
+                if (mCarriageCanifier.hasBall()) {
                     rumble = true;
                 }
                 mIntakeButtonPressed = true;
